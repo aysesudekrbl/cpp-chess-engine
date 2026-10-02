@@ -1,0 +1,9 @@
+# Derlenmiş programlar ve nesne dosyaları
+*.o
+play_chess
+
+# macOS özel sistem dosyaları
+.DS_Store
+
+# Hata ayıklama (Debug) ve önbellek dosyaları
+*.dSYM/
