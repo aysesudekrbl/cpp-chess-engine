@@ -15,12 +15,11 @@ void Game::startGame(){
 
     while(!isEnded){
         cout<<"Enter move: ";
-        if(moveNum %2 == 0){
-            cout << "White:  ";
-        }
-        else{
-            cout <<"Black:  ";
-        }
+        Turn turn = (turn == Turn::WHITE) ? Turn::BLACK : Turn::WHITE;
+
+        if (turn == WHITE) cout << "White:  ";
+        else cout << "Black:  ";
+
         cin >> from >> to;
         cout <<endl;
         y1 = letterToInt(from[0]);
@@ -28,8 +27,6 @@ void Game::startGame(){
         y2 = letterToInt(to[0]);
         x2= numToInt(to[1]);
 
-        cout << "DEBUG: " << from << " okundu. X(satir): " << x1 << ", Y(sutun): " << y1 << endl;
-        cout << "DEBUG: " << to << " okundu. X(satir): " << x2 << ", Y(sutun): " << y2 << endl;
 
         chessboard.movePiece(x1,y1,x2,y2);
         chessboard.showBoard();

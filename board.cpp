@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "board.h"
+#include "pieces.h"
 #include <utility>
 using namespace std;
 
@@ -94,4 +95,34 @@ bool Board::isPathClear(int startX,int startY,int endX,int endY){
         
     }
     return true;
+}
+
+pair<int,int> Board::kingPosition(Turn turn){
+    char symbol = (turn == WHITE)?'K':'k';
+
+    for(int y = 0; y < 8; y ++){
+        for (int x = 0; x<8; x++){
+            if (Board::grid[x][y] -> getSymbol() == symbol) return make_pair(x,y);
+        }
+}
+}
+
+bool Board::isCheck(Turn turn){
+    auto kingPos = kingPosition(turn);
+    int kingX = kingPos.first;
+    int kingY = kingPos.second;
+    Piece * kingPiece  = grid[kingX][kingY].get();
+
+    PieceColor enemyColor;
+    if (turn == WHITE) enemyColor = PieceColor::BLACK;
+    else enemyColor = PieceColor::WHITE;
+
+    for(int y = 0; y < 8; y ++){
+        for (int x = 0; x<8; x++){
+            if (grid[x][y] != nullptr  && grid[x][y] -> getColor() == enemyColor){
+                if (grid[x][y] -> isValidMove(x,y,kingX,kingY,kingPiece)) return true;
+                }
+        }
+    } 
+    return false;
 }

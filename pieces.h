@@ -18,6 +18,9 @@ class Piece{
         char getSymbol(){
             return pieceSymbol;
         }
+        PieceColor getColor(){
+            return pieceColor;
+        }
         
         virtual bool isValidMove(int startX, int startY, int endX, int endY,Piece * targetPiece) { return true; }
 };
