@@ -62,7 +62,7 @@ void Board::movePiece(int startX,int startY,int endX,int endY){
         Piece * piece = grid[endX][endY].get();
 
         if (grid[startX][startY] ->isValidMove(startX,startY,endX,endY,piece)){
-            if (grid[startX][startY]->getSymbol() == 'N'|| piece->getSymbol() == 'n'){
+            if (grid[startX][startY]->getSymbol() == 'N'|| grid[startX][startY]->getSymbol() == 'n'){
                 grid[endX][endY] = std::move(grid[startX][startY]);
             }
             else{

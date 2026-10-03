@@ -1,10 +1,12 @@
 #include "board.h"
 #include "pieces.h"
+#include "game.h"
 
 using namespace std;
 
 int main(){
-    Board chessboard;
+    
+    /*Board chessboard;
 
     chessboard.cleanBoard();
     chessboard.setBoard();
@@ -12,6 +14,10 @@ int main(){
     chessboard.movePiece(6,5,5,5);
     chessboard.movePiece(1,7,2,7);
     chessboard.showBoard();
+    */
+
+    Game gameplay;
+    gameplay.startGame();
 
     return 0;
 }
