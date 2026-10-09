@@ -14,6 +14,20 @@ void Board:: cleanBoard(){
     }
 }
 
+bool Board::simulateMoveandCheck(int startX, int startY, int endX, int endY){
+    bool isDanger;
+
+    unique_ptr<Piece> temp = move(grid[endX][endY]);
+    grid[endX][endY] = move(grid[startX][startY]);
+
+    isDanger = isCheck(currentTurn);
+    grid[startX][startY] = move(grid[endX][endY]);
+    grid[endX][endY] = move(temp);
+
+    return isDanger;
+
+}
+
 void Board:: setBoard(){
     for (int i = 0; i < 8; i++){
         grid[1][i] = make_unique<Pawn>(PieceColor::WHITE);
@@ -58,21 +72,36 @@ void Board::showBoard(){
         
 }
 
-void Board::movePiece(int startX,int startY,int endX,int endY){
-    if (grid[startX][startY]!= nullptr){
-        Piece * piece = grid[endX][endY].get();
+void Board::movePiece(int startX, int startY, int endX, int endY) {
+    
+    if (grid[startX][startY] == nullptr) return; 
+    
+    PieceColor expectedColor = (currentTurn == Turn::WHITE) ? PieceColor::WHITE : PieceColor::BLACK;
+    if (grid[startX][startY]->getColor() != expectedColor) {
+        return; 
+    }
 
-        if (grid[startX][startY] ->isValidMove(startX,startY,endX,endY,piece)){
-            if (grid[startX][startY]->getSymbol() == 'N'|| grid[startX][startY]->getSymbol() == 'n'){
-                grid[endX][endY] = std::move(grid[startX][startY]);
-            }
-            else{
-                if (Board::isPathClear(startX,startY,endX,endY)){
-                    grid[endX][endY] = std::move(grid[startX][startY]);
-                }
-            }
+    Piece* targetPiece = grid[endX][endY].get();
+
+    if (targetPiece != nullptr && targetPiece->getColor() == grid[startX][startY]->getColor()) {
+        return; 
+    }
+
+    if (!grid[startX][startY]->isValidMove(startX, startY, endX, endY, targetPiece)) {
+        return; 
+    }
+
+    char symbol = grid[startX][startY]->getSymbol();
+    if (symbol != 'N' && symbol != 'n') {
+        if (!isPathClear(startX, startY, endX, endY)) {
+            return; 
         }
     }
+
+    if(simulateMoveandCheck(startX,startY,endX,endY)) return;
+
+    grid[endX][endY] = std::move(grid[startX][startY]);
+    currentTurn = (currentTurn == Turn::WHITE) ? Turn::BLACK : Turn::WHITE;
 }
 
 bool Board::isPathClear(int startX,int startY,int endX,int endY){
@@ -102,9 +131,10 @@ pair<int,int> Board::kingPosition(Turn turn){
 
     for(int y = 0; y < 8; y ++){
         for (int x = 0; x<8; x++){
-            if (Board::grid[x][y] -> getSymbol() == symbol) return make_pair(x,y);
+            if (grid[x][y] != nullptr && Board::grid[x][y] -> getSymbol() == symbol) return make_pair(x,y);
         }
-}
+    }
+    return make_pair(-1, -1);
 }
 
 bool Board::isCheck(Turn turn){
